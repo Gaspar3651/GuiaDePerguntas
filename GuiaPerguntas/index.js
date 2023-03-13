@@ -13,4 +13,12 @@ app.get(
     }
 );
 
+
+app.get(
+    '/perguntar',
+    function (req, res) {
+        res.render('perguntar.ejs');
+    }
+);
+
 app.listen(1111);
