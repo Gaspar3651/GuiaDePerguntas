@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Guia de perguntas</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    
+    <body>
+        <h1>Guia de perguntas</h1>
+        <hr>        
+        <% if(exibirMsg){ %>
+            <h3>Isso é um erro</h3>
+        <% } else { %>
+                <p>Nome: <%= nome %></p>
+                <p>Linguagem: <%= lang %></p>
+                <p>Exibir Mensagem? <%= exibirMsg %></p>
+        <% } %>
+
+        <% produtos.forEach(function(produto){ %>
+            <hr>
+            <h5><%= produto.nome %></h5>
+            <h4><%= produto.preco %></h4>
+        <% }) %>
+    </body>
+</html>
