@@ -1,11 +1,12 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const bodyParser = require('body-parser');
 
 // USANDO EJS COMO VIEW ENGINE NO LUGAR DE HTML
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+
 
 // BODY PARSER
 app.use(bodyParser.urlencoded({extended: false}));
@@ -30,10 +31,10 @@ app.get(
 
 app.post(
     '/salvarPergunta',
-    function (req, res) {
+    (req, res) => {
         //  ESSA PARTE AINDA NÃO FUNCIONA
-        var teste = req.body['descricao'];
-        res.send('perguntar ' + teste);
+        var bodyParametros = req.body;
+        res.send('Titulo: ' + bodyParametros.titulo+ ' <br> <br> Descrição: ' + bodyParametros.descricao);
     }
 );
 
