@@ -24,7 +24,20 @@ app.use(bodyParser.json());
 app.get(
     '/',
     function (req, res) {
-        res.render('index.ejs');
+        Pergunta.findAll(
+            {
+                raw: true,
+                order:[
+                    ['createdAt', 'DESC']
+                ]
+            }).then(perguntas =>{
+                res.render('index.ejs',
+                    {
+                        perguntas: perguntas
+                    }
+            );
+        });
+        
     }
 );
 
@@ -47,6 +60,24 @@ app.post(
             descricao: bodyParametros.descricao
         }).then(() => {
             res.redirect('/');
+        });
+    }
+);
+
+app.get(
+    '/pergunta/:id',
+    function (req, res) {
+        var id = req.params.id;
+        Pergunta.findOne({
+            where: {
+                id: id
+            }
+        }).then(result =>{
+            if (result != undefined) {  // PERGUNTA ENCONTRADA
+                res.render('pergunta.ejs');
+            }else{  // PERGUNTA NÃO ENCONTRADA
+                res.redirect('/');
+            }
         });
     }
 );
