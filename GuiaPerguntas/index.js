@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const connection = require('./dataBase/dataBase');
-const perguntaModel = require('./dataBase/Pergunta');
+const Pergunta = require('./dataBase/Pergunta');
 
 // DATA BASE
 connection.authenticate().then(() =>{
@@ -41,7 +41,13 @@ app.post(
     '/salvarPergunta',
     (req, res) => {
         var bodyParametros = req.body;
-        res.send('Titulo: ' + bodyParametros.titulo+ ' <br> <br> Descrição: ' + bodyParametros.descricao);
+
+        Pergunta.create({
+            titulo: bodyParametros.titulo,
+            descricao: bodyParametros.descricao
+        }).then(() => {
+            res.redirect('/');
+        });
     }
 );
 
