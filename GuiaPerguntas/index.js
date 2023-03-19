@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const connection = require('./dataBase/dataBase');
+const perguntaModel = require('./dataBase/Pergunta');
+
 // DATA BASE
 connection.authenticate().then(() =>{
     console.log('Conexão feita com o banco de dados!');
