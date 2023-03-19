@@ -1,28 +1,30 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Guia de perguntas</title>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+<%- include('partials/header.ejs') %>
+<body>
+    <%- include('partials/navbar.ejs') %>
     
-    <body>
-        <h1>Guia de perguntas</h1>
-        <hr>        
-        <% if(exibirMsg){ %>
-            <h3>Isso é um erro</h3>
-        <% } else { %>
-                <p>Nome: <%= nome %></p>
-                <p>Linguagem: <%= lang %></p>
-                <p>Exibir Mensagem? <%= exibirMsg %></p>
-        <% } %>
+    <div class="container">
+        <hr>
+        <h1>Perguntas</h1>
+        <a href="/perguntar" class="btn btn-primary">Perguntar</a>
+        <hr>
+    
+        <% perguntas.forEach(item =>{ %>
+            <br>
+            <div class="card">
+                <div class="card-header">
+                    <h4><%= item.titulo %></h4>
+                </div>
 
-        <% produtos.forEach(function(produto){ %>
-            <hr>
-            <h5><%= produto.nome %></h5>
-            <h4><%= produto.preco %></h4>
+                <div class="card-body">
+                    <p><%= item.descricao %></p>
+                </div>
+
+                <div class="card-footer">
+                    <a href="/pergunta/<%= item.id %>" class="btn btn-success">Responder</a>
+                </div>
+            </div>
+
         <% }) %>
-    </body>
-</html>
+    </div>
+</body>
+<%- include('partials/footer.ejs') %>

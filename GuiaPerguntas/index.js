@@ -1,32 +1,120 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
+const connection = require('./dataBase/dataBase');
+const Pergunta = require('./dataBase/Pergunta');
+const Resposta = require('./dataBase/Resposta');
+
+// DATA BASE
+connection.authenticate().then(() =>{
+    console.log('Conexão feita com o banco de dados!');
+}).catch((msgErro) =>{
+    console.log('ERROR: '+ msgErro);
+});
 
 // USANDO EJS COMO VIEW ENGINE NO LUGAR DE HTML
+app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
+// BODY PARSER
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+// ROTAS
 app.get(
     '/',
     function (req, res) {
-        var nome = 'Andri';
-        var lang = 'JS';
-        var exibirMsg = false;
-        var produtos = [
-            {nome: 'Doritos', preco: 3.14},
-            {nome: 'Coca-cola', preco: 5},
-            {nome: 'Leite', preco: 1.45}
-        ];
-
-        res.render(
-            'index.ejs', 
+        Pergunta.findAll(
             {
-                nome, 
-                lang,
-                exibirMsg,
-                produtos
-            }
-        );
+                raw: true,
+                order:[
+                    ['createdAt', 'DESC']
+                ]
+            }).then(perguntas =>{
+                res.render('index.ejs',
+                    {
+                        perguntas: perguntas
+                    }
+            );
+        });
+        
     }
 );
 
-app.listen(1212);
+
+app.get(
+    '/perguntar',
+    function (req, res) {
+        res.render('perguntar.ejs');
+    }
+);
+
+
+app.post(
+    '/salvarPergunta',
+    (req, res) => {
+        var bodyParametros = req.body;
+
+        Pergunta.create({
+            titulo: bodyParametros.titulo,
+            descricao: bodyParametros.descricao
+        }).then(() => {
+            res.redirect('/');
+        });
+    }
+);
+
+app.get(
+    '/pergunta/:id',
+    function (req, res) {
+        var id = req.params.id;
+        Pergunta.findOne({
+            where: {
+                id: id
+            }
+        }).then(result =>{
+            if (result != undefined) {  // PERGUNTA ENCONTRADA
+                
+                Resposta.findAll({
+                    where:{
+                        perguntaId: result.id
+                    },
+                    order:[
+                        ['createdAt', 'DESC']
+                    ]
+                }).then(resultResposta =>{
+                    res.render('pergunta.ejs',{
+                        pergunta: result,
+                        respostas: resultResposta
+                    });
+                });                  
+                    
+            }else{  // PERGUNTA NÃO ENCONTRADA
+                res.redirect('/');
+            }
+        });
+    }
+);
+
+
+app.post(
+    '/responder',
+    (req, res) => {
+        var bodyParametros = req.body;   
+
+        Resposta.create({
+            corpo: bodyParametros.corpo,
+            perguntaId: bodyParametros.perguntaId
+        }).then(() =>{
+            res.redirect('/pergunta/'+ bodyParametros.perguntaId);
+        }).catch(Error => {
+            console.log('ERRO: '+ Error);
+        });
+    }
+);
+
+
+
+app.listen(1111);
