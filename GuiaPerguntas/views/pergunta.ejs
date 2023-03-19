@@ -18,6 +18,18 @@
             <br>
             <button class="btn btn-success">Responder</button>
         </form>
+
+        <hr>
+
+        <% respostas.forEach(item =>{ %>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <p><%= item.corpo %></p>
+                </div>
+            </div>
+        <% }) %>
+        
     </div>
 </body>
 <%- include('partials/footer.ejs') %>

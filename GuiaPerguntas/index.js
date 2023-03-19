@@ -76,9 +76,21 @@ app.get(
             }
         }).then(result =>{
             if (result != undefined) {  // PERGUNTA ENCONTRADA
-                res.render('pergunta.ejs',{
-                    pergunta: result
-                });
+                
+                Resposta.findAll({
+                    where:{
+                        perguntaId: result.id
+                    },
+                    order:[
+                        ['createdAt', 'DESC']
+                    ]
+                }).then(resultResposta =>{
+                    res.render('pergunta.ejs',{
+                        pergunta: result,
+                        respostas: resultResposta
+                    });
+                });                  
+                    
             }else{  // PERGUNTA NÃO ENCONTRADA
                 res.redirect('/');
             }
@@ -91,8 +103,6 @@ app.post(
     '/responder',
     (req, res) => {
         var bodyParametros = req.body;   
-        console.log('---------------> ' + bodyParametros.corpo);
-        console.log('---------------> ' + bodyParametros.perguntaId);
 
         Resposta.create({
             corpo: bodyParametros.corpo,
