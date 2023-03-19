@@ -74,7 +74,9 @@ app.get(
             }
         }).then(result =>{
             if (result != undefined) {  // PERGUNTA ENCONTRADA
-                res.render('pergunta.ejs');
+                res.render('pergunta.ejs',{
+                    pergunta: result
+                });
             }else{  // PERGUNTA NÃO ENCONTRADA
                 res.redirect('/');
             }
