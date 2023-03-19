@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+
 const connection = require('./dataBase/dataBase');
 const Pergunta = require('./dataBase/Pergunta');
 const Resposta = require('./dataBase/Resposta');
@@ -84,5 +85,26 @@ app.get(
         });
     }
 );
+
+
+app.post(
+    '/responder',
+    (req, res) => {
+        var bodyParametros = req.body;   
+        console.log('---------------> ' + bodyParametros.corpo);
+        console.log('---------------> ' + bodyParametros.perguntaId);
+
+        Resposta.create({
+            corpo: bodyParametros.corpo,
+            perguntaId: bodyParametros.perguntaId
+        }).then(() =>{
+            res.redirect('/pergunta/'+ bodyParametros.perguntaId);
+        }).catch(Error => {
+            console.log('ERRO: '+ Error);
+        });
+    }
+);
+
+
 
 app.listen(1111);
